@@ -47,6 +47,7 @@ export default function AdminPage() {
   const [providers, setProviders] = useState<Provider[]>([]);
   const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [activeTab, setActiveTab] = useState<'pending' | 'active' | 'create' | 'marketing' | 'settings'>('pending');
+  const [providerFilter, setProviderFilter] = useState<'all' | 'active' | 'suspended'>('all');
   const [copiedMsg, setCopiedMsg] = useState(false);
 
   // Manual provider creation state
@@ -226,8 +227,17 @@ export default function AdminPage() {
   };
 
   // Calculations
+  const registeredProviders = providers.filter((p) => p.status !== 'pending_payment');
   const activeProviders = providers.filter((p) => p.status === 'active');
+  const suspendedProviders = providers.filter((p) => p.status === 'suspended');
   const pendingProviders = providers.filter((p) => p.status === 'pending_payment');
+
+  const displayedProviders = registeredProviders.filter((p) => {
+    if (providerFilter === 'active') return p.status === 'active';
+    if (providerFilter === 'suspended') return p.status === 'suspended';
+    return true;
+  });
+
   const monthlyRevenue = activeProviders.reduce((acc, p) => {
     return acc + (p.isPromo ? (settings?.promoPrice || 10000) : (settings?.standardPrice || 15000));
   }, 0);
@@ -430,8 +440,13 @@ export default function AdminPage() {
                 : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'
             }`}
           >
-            <CheckCircle2 className="w-4 h-4" />
-            <span>Prestadores Activos ({activeProviders.length})</span>
+            <Users className="w-4 h-4" />
+            <span>Prestadores ({registeredProviders.length})</span>
+            {suspendedProviders.length > 0 && (
+              <span className="bg-amber-400 text-slate-950 text-[10px] font-black px-1.5 py-0.2 rounded-full">
+                {suspendedProviders.length} Pausados
+              </span>
+            )}
           </button>
 
           <button
@@ -656,12 +671,56 @@ Lanzamos ServiSarare, el nuevo directorio digital donde las familias del pueblo 
           </div>
         )}
 
-        {/* TAB 2: ACTIVE PROVIDERS */}
+        {/* TAB 2: REGISTERED PROVIDERS (ACTIVE & SUSPENDED) */}
         {activeTab === 'active' && (
           <div className="space-y-4">
-            <h2 className="text-lg font-bold text-slate-900">
-              Listado de Prestadores Activos ({activeProviders.length})
-            </h2>
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <h2 className="text-lg font-bold text-slate-900">
+                  Directorio de Prestadores Registrados
+                </h2>
+                <p className="text-xs text-slate-500">
+                  Gestiona a los trabajadores, páusalos si están en mora y reactívalos cuando se pongan al día.
+                </p>
+              </div>
+
+              {/* Filter chips: Todos | Activos | Pausados */}
+              <div className="flex items-center gap-1.5 bg-slate-200/80 p-1 rounded-xl text-xs font-bold self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={() => setProviderFilter('all')}
+                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                    providerFilter === 'all'
+                      ? 'bg-white text-slate-900 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Todos ({registeredProviders.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setProviderFilter('active')}
+                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                    providerFilter === 'active'
+                      ? 'bg-emerald-600 text-white shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Activos ({activeProviders.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setProviderFilter('suspended')}
+                  className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
+                    providerFilter === 'suspended'
+                      ? 'bg-amber-500 text-slate-950 shadow-xs'
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                >
+                  Pausados ({suspendedProviders.length})
+                </button>
+              </div>
+            </div>
 
             <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-xs">
               <div className="overflow-x-auto">
@@ -677,63 +736,92 @@ Lanzamos ServiSarare, el nuevo directorio digital donde las familias del pueblo 
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100">
-                    {activeProviders.map((p) => (
-                      <tr key={p.id} className="hover:bg-slate-50/80 transition-colors">
-                        <td className="p-3.5">
-                          <div className="font-bold text-slate-900">{p.name}</div>
-                          <div className="text-xs text-emerald-700 font-medium">
-                            {Array.isArray(p.categoryNames) && p.categoryNames.length > 0
-                              ? p.categoryNames.join(', ')
-                              : p.categoryName}
-                          </div>
-                        </td>
-                        <td className="p-3.5 text-slate-600 font-medium">
-                          {p.municipality}
-                        </td>
-                        <td className="p-3.5">
-                          <a
-                            href={`https://wa.me/${p.phone}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-emerald-700 hover:underline font-bold flex items-center gap-1"
-                          >
-                            <MessageCircle className="w-3.5 h-3.5" />
-                            {p.displayPhone}
-                          </a>
-                        </td>
-                        <td className="p-3.5">
-                          {p.isPromo ? (
-                            <span className="bg-amber-100 text-amber-900 text-[11px] font-bold px-2 py-0.5 rounded">
-                              $10.000 (Promo)
-                            </span>
-                          ) : (
-                            <span className="bg-slate-100 text-slate-700 text-[11px] font-medium px-2 py-0.5 rounded">
-                              $15.000 (Normal)
-                            </span>
-                          )}
-                        </td>
-                        <td className="p-3.5">
-                          <span className="inline-flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full text-xs font-bold">
-                            <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
-                            Activo
-                          </span>
-                        </td>
-                        <td className="p-3.5 text-right space-x-2">
-                          <button
-                            onClick={() => handleToggleStatus(p.id, p.status)}
-                            className="px-2.5 py-1 rounded-lg bg-amber-50 hover:bg-amber-100 text-amber-800 text-xs font-bold transition-colors cursor-pointer"
-                          >
-                            Pausar
-                          </button>
-                          <button
-                            onClick={() => handleDelete(p.id)}
-                            className="px-2.5 py-1 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold transition-colors cursor-pointer"
-                          >
-                            Eliminar
-                          </button>
+                    {displayedProviders.length === 0 ? (
+                      <tr>
+                        <td colSpan={6} className="p-8 text-center text-slate-400">
+                          No hay prestadores en esta vista.
                         </td>
                       </tr>
-                    ))}
+                    ) : (
+                      displayedProviders.map((p) => (
+                        <tr key={p.id} className="hover:bg-slate-50/80 transition-colors">
+                          <td className="p-3.5">
+                            <div className="font-bold text-slate-900">{p.name}</div>
+                            <div className="text-xs text-emerald-700 font-medium">
+                              {Array.isArray(p.categoryNames) && p.categoryNames.length > 0
+                                ? p.categoryNames.join(', ')
+                                : p.categoryName}
+                            </div>
+                          </td>
+                          <td className="p-3.5 text-slate-600 font-medium">
+                            {p.municipality}
+                          </td>
+                          <td className="p-3.5">
+                            <a
+                              href={`https://wa.me/${p.phone}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-emerald-700 hover:underline font-bold flex items-center gap-1"
+                            >
+                              <MessageCircle className="w-3.5 h-3.5" />
+                              {p.displayPhone}
+                            </a>
+                          </td>
+                          <td className="p-3.5">
+                            {p.isPromo ? (
+                              <span className="bg-amber-100 text-amber-900 text-[11px] font-bold px-2 py-0.5 rounded">
+                                $10.000 (Promo)
+                              </span>
+                            ) : (
+                              <span className="bg-slate-100 text-slate-700 text-[11px] font-medium px-2 py-0.5 rounded">
+                                $15.000 (Normal)
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-3.5">
+                            {p.status === 'active' ? (
+                              <span className="inline-flex items-center gap-1.5 text-emerald-800 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full text-xs font-bold">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                                En Línea
+                              </span>
+                            ) : (
+                              <span className="inline-flex items-center gap-1.5 text-amber-900 bg-amber-50 border border-amber-300 px-2.5 py-0.5 rounded-full text-xs font-bold">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500" />
+                                Pausado (Oculto)
+                              </span>
+                            )}
+                          </td>
+                          <td className="p-3.5 text-right space-x-2">
+                            {p.status === 'active' ? (
+                              <button
+                                type="button"
+                                onClick={() => handleToggleStatus(p.id, p.status)}
+                                className="px-3 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-bold transition-colors cursor-pointer"
+                                title="Pausar y ocultar del directorio público"
+                              >
+                                ⏸️ Pausar
+                              </button>
+                            ) : (
+                              <button
+                                type="button"
+                                onClick={() => handleToggleStatus(p.id, p.status)}
+                                className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold transition-colors cursor-pointer shadow-xs"
+                                title="Reactivar y poner en línea de nuevo"
+                              >
+                                ▶️ Reactivar
+                              </button>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => handleDelete(p.id)}
+                              className="px-2.5 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold transition-colors cursor-pointer"
+                            >
+                              Eliminar
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    )}
                   </tbody>
                 </table>
               </div>
