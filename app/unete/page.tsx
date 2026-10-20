@@ -1,7 +1,8 @@
 'use client';
 
-import React from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import {
@@ -20,20 +21,30 @@ import {
   Clock,
   ThumbsUp,
   AlertTriangle,
+  MapPin,
 } from 'lucide-react';
 import { getStoredSettings } from '@/lib/storage';
-import { SiteSettings } from '@/lib/types';
+import { SiteSettings, Municipality } from '@/lib/types';
+import { MUNICIPALITIES } from '@/lib/data';
 
-export default function UneteLandingPage() {
-  const [settings, setSettings] = React.useState<SiteSettings | null>(null);
+function UneteContent() {
+  const searchParams = useSearchParams();
+  const initialMun = (searchParams.get('m') as Municipality) || 'Saravena';
 
-  React.useEffect(() => {
+  const [municipality, setMunicipality] = useState<Municipality>(initialMun);
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
+
+  useEffect(() => {
     setSettings(getStoredSettings());
-  }, []);
+    const mParam = searchParams.get('m') as Municipality;
+    if (mParam && MUNICIPALITIES.some((item) => item.name === mParam)) {
+      setMunicipality(mParam);
+    }
+  }, [searchParams]);
 
   const adminPhone = settings?.contactWhatsApp || settings?.daviplataNumber || '573123456789';
   const whatsappUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(
-    '¡Hola! Escaneé el código QR de ServiSarare y me gustaría inscribir mi servicio para empezar a recibir clientes.'
+    `¡Hola! Escaneé el código QR de ServiSarare en ${municipality} y me gustaría inscribir mi servicio para empezar a recibir clientes.`
   )}`;
 
   const promoPrice = settings?.promoPrice || 10000;
@@ -41,7 +52,7 @@ export default function UneteLandingPage() {
 
   return (
     <div className="min-h-screen bg-slate-50 text-slate-900 flex flex-col justify-between">
-      <Navbar currentMunicipality="Saravena" onSelectMunicipality={() => {}} />
+      <Navbar currentMunicipality={municipality} onSelectMunicipality={(m) => setMunicipality(m)} />
 
       <main className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 space-y-10 flex-1">
         
@@ -49,15 +60,15 @@ export default function UneteLandingPage() {
         <div className="text-center space-y-4 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 bg-linear-to-r from-red-600 to-amber-600 text-white px-4 py-1.5 rounded-full text-xs font-black uppercase tracking-wider shadow-md">
             <Flame className="w-4 h-4 fill-white animate-bounce" />
-            <span>Oportunidad Exclusiva para Trabajadores de Saravena</span>
+            <span>Oportunidad Exclusiva para Trabajadores de {municipality} y el Sarare</span>
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-slate-950 tracking-tight leading-tight">
-            Deje de esperar a que le salga trabajo por casualidad. <span className="text-emerald-700 underline decoration-amber-400">Haga que los clientes lo llamen a usted.</span>
+            Deje de esperar a que le salga trabajo por casualidad. <span className="text-emerald-700 underline decoration-amber-400">Haga que los clientes de {municipality} lo llamen a usted.</span>
           </h1>
 
           <p className="text-base sm:text-lg text-slate-700 font-medium leading-relaxed max-w-2xl mx-auto">
-            Únase a <strong>ServiSarare</strong>, la plataforma donde las familias y negocios de Saravena buscan electricistas, maestros de obra, plomeros, pintores, soldadores, instaladores de PVC, mecánicos, acarreos y más.
+            Únase a <strong>ServiSarare</strong>, la plataforma donde las familias y negocios de <strong>{municipality}</strong> buscan electricistas, maestros de obra, plomeros, pintores, soldadores, instaladores de PVC, mecánicos, acarreos y más.
           </p>
 
           {/* Urgency Counter Badge */}
@@ -72,19 +83,19 @@ export default function UneteLandingPage() {
         <section className="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200 shadow-xl space-y-6">
           <div className="space-y-3">
             <h2 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">
-              ¿Por qué depender solo del "boca a boca" le hace perder dinero?
+              ¿Por qué depender solo del "boca a boca" en {municipality} le hace perder dinero?
             </h2>
             <div className="text-xs sm:text-sm text-slate-700 space-y-3 leading-relaxed">
               <p>
-                Todos sabemos que en Saravena el trabajo se ha conseguido tradicionalmente cuando un vecino o amigo lo recomienda. <strong>Pero esa recomendación tarda días o semanas en llegar.</strong>
+                Todos sabemos que en nuestra región el trabajo se ha conseguido tradicionalmente cuando un vecino o amigo lo recomienda. <strong>Pero esa recomendación tarda días o semanas en llegar.</strong>
               </p>
               <p>
-                Hoy en día, cuando a una persona en el pueblo se le rompe un tubo, se le daña un breaker, necesita pintar su casa o cambiar el cielo raso, <strong>lo primero que hace es coger su celular</strong>. Si usted tiene su perfil con fotos de sus trabajos y su número de WhatsApp en ServiSarare, esa persona lo ve y le escribe de inmediato.
+                Hoy en día, cuando a una persona en {municipality} se le rompe un tubo, se le daña un breaker, necesita pintar su casa o cambiar el cielo raso, <strong>lo primero que hace es coger su celular</strong>. Si usted tiene su perfil con fotos de sus trabajos y su número de WhatsApp en ServiSarare, esa persona lo ve y le escribe de inmediato.
               </p>
             </div>
           </div>
 
-          {/* Mathematical Proof: ROI / Return on investment */}
+          {/* Mathematical Proof */}
           <div className="bg-emerald-50 border-2 border-emerald-300 p-5 rounded-2xl space-y-2">
             <div className="flex items-center gap-2 text-emerald-950 font-black text-sm sm:text-base">
               <DollarSign className="w-5 h-5 text-emerald-700" />
@@ -161,7 +172,7 @@ export default function UneteLandingPage() {
               Paso Siguiente
             </span>
             <h2 className="text-2xl sm:text-3xl font-black text-white">
-              ¿Listo para empezar a recibir más llamadas de trabajo?
+              ¿Listo para empezar a recibir más llamadas en {municipality}?
             </h2>
             <p className="text-xs sm:text-sm text-slate-300 max-w-lg mx-auto">
               Inscribirse toma menos de 2 minutos. Puede hacerlo usted mismo en línea o escribirnos por WhatsApp y nosotros le ayudamos con todo el proceso.
@@ -246,5 +257,13 @@ export default function UneteLandingPage() {
 
       <Footer />
     </div>
+  );
+}
+
+export default function UneteLandingPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Cargando información...</div>}>
+      <UneteContent />
+    </Suspense>
   );
 }
