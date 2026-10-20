@@ -4,6 +4,7 @@ import React from 'react';
 import Link from 'next/link';
 import { MapPin, MessageCircle, ShieldCheck, Heart, Printer, QrCode } from 'lucide-react';
 import { CATEGORIES, MUNICIPALITIES } from '@/lib/data';
+import { Logo } from '@/components/Logo';
 
 export function Footer() {
   return (
@@ -12,20 +13,31 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 pb-10 border-b border-slate-800">
           {/* Brand Col */}
           <div className="space-y-3 md:col-span-1">
-            <div className="flex items-center gap-2">
-              <div className="w-9 h-9 rounded-xl bg-linear-to-br from-amber-500 to-emerald-600 flex items-center justify-center text-white font-black text-lg">
-                ⚡
+            <Link href="/" className="inline-block group">
+              <div className="flex items-center gap-2">
+                <Logo size="sm" showText={false} />
+                <span className="font-extrabold text-xl text-white">
+                  Servi<span className="text-emerald-400">Sarare</span>
+                </span>
               </div>
-              <span className="font-extrabold text-xl text-white">
-                Servi<span className="text-emerald-400">Sarare</span>
-              </span>
-            </div>
+            </Link>
+
             <p className="text-xs text-slate-400 leading-relaxed">
               La plataforma digital creada para conectar a las familias y negocios de <strong>Saravena</strong> y el <strong>Sarare</strong> con los mejores electricistas, plomeros, constructores y trabajadores de nuestra tierra.
             </p>
-            <div className="text-xs text-emerald-400 font-medium flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5" />
-              <span>Saravena • Arauca • Colombia</span>
+
+            <div className="space-y-1.5 pt-1">
+              <Link
+                href="/nosotros"
+                className="inline-flex items-center gap-1.5 text-xs text-amber-400 hover:text-amber-300 font-bold transition-colors"
+              >
+                <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" />
+                <span>Conoce Nuestra Historia y Misión ↗</span>
+              </Link>
+              <div className="text-xs text-emerald-400 font-medium flex items-center gap-1">
+                <MapPin className="w-3.5 h-3.5" />
+                <span>Saravena • Arauca • Colombia</span>
+              </div>
             </div>
           </div>
 
@@ -113,7 +125,7 @@ export function Footer() {
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
           <p>© {new Date().getFullYear()} ServiSarare. Todos los derechos reservados.</p>
           <p className="flex items-center gap-1">
-            Hecho con orgullo llanero <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500 inline" /> para Saravena.
+            Hecho con orgullo llanero <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500 inline" /> para Saravena y el Sarare.
           </p>
         </div>
       </div>

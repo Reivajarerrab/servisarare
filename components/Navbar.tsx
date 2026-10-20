@@ -2,9 +2,10 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { MapPin, PlusCircle, Menu, X, ShieldCheck, HelpCircle, PhoneCall, Printer } from 'lucide-react';
+import { MapPin, PlusCircle, Menu, X, ShieldCheck, HelpCircle, PhoneCall, Printer, Heart } from 'lucide-react';
 import { Municipality } from '@/lib/types';
 import { MUNICIPALITIES } from '@/lib/data';
+import { Logo } from '@/components/Logo';
 
 interface NavbarProps {
   currentMunicipality: Municipality;
@@ -19,24 +20,13 @@ export function Navbar({ currentMunicipality, onSelectMunicipality }: NavbarProp
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-amber-100 shadow-xs">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-18">
-          {/* Brand Logo */}
-          <Link href="/" className="flex items-center gap-3 group">
-            <div className="w-11 h-11 rounded-xl bg-linear-to-br from-amber-500 to-emerald-600 flex items-center justify-center text-white font-black text-xl shadow-md shadow-amber-500/20 group-hover:scale-105 transition-transform">
-              ⚡
-            </div>
-            <div>
-              <div className="flex items-center gap-1.5">
-                <span className="font-extrabold text-2xl tracking-tight text-slate-900">
-                  Servi<span className="text-emerald-600">Sarare</span>
-                </span>
-                <span className="bg-emerald-100 text-emerald-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full uppercase tracking-wider">
-                  Arauca
-                </span>
-              </div>
-              <p className="text-xs text-slate-500 font-medium hidden sm:block">
-                Directorio local de trabajadores y servicios
-              </p>
-            </div>
+          {/* Brand Logo with Custom SVG & Regional Badge */}
+          <Link
+            href="/"
+            className="flex items-center gap-3 group transition-transform active:scale-98"
+            title="Ir al inicio de ServiSarare"
+          >
+            <Logo size="md" showText={true} />
           </Link>
 
           {/* Center: Municipality Switcher */}
@@ -103,12 +93,21 @@ export function Navbar({ currentMunicipality, onSelectMunicipality }: NavbarProp
           </div>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center gap-4">
+          <div className="hidden md:flex items-center gap-3 lg:gap-4">
+            <Link
+              href="/nosotros"
+              className="text-xs font-bold text-emerald-800 hover:text-emerald-950 bg-emerald-50 hover:bg-emerald-100/80 px-2.5 py-1.5 rounded-lg flex items-center gap-1 transition-colors border border-emerald-200"
+              title="Conoce la historia, misión y visión de ServiSarare"
+            >
+              <Heart className="w-3.5 h-3.5 text-red-500 fill-red-500" />
+              <span>Nuestra Historia</span>
+            </Link>
+
             <Link
               href="/como-funciona"
-              className="text-sm font-medium text-slate-600 hover:text-emerald-700 flex items-center gap-1.5 transition-colors"
+              className="text-xs font-medium text-slate-600 hover:text-emerald-700 flex items-center gap-1 transition-colors"
             >
-              <HelpCircle className="w-4 h-4 text-slate-400" />
+              <HelpCircle className="w-3.5 h-3.5 text-slate-400" />
               ¿Cómo funciona?
             </Link>
 
@@ -130,10 +129,10 @@ export function Navbar({ currentMunicipality, onSelectMunicipality }: NavbarProp
 
             <Link
               href="/registro"
-              className="relative inline-flex items-center gap-2 px-4 py-2.5 rounded-xl bg-linear-to-r from-emerald-600 to-emerald-700 text-white text-sm font-bold shadow-md shadow-emerald-600/20 hover:from-emerald-700 hover:to-emerald-800 hover:shadow-lg transition-all active:scale-98"
+              className="relative inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-linear-to-r from-emerald-600 to-emerald-700 text-white text-xs sm:text-sm font-bold shadow-md shadow-emerald-600/20 hover:from-emerald-700 hover:to-emerald-800 hover:shadow-lg transition-all active:scale-98"
             >
               <PlusCircle className="w-4 h-4" />
-              <span>Inscribir mi Servicio</span>
+              <span>Inscribirme</span>
               <span className="bg-amber-400 text-slate-900 text-[10px] font-black px-1.5 py-0.5 rounded-full animate-pulse">
                 $10k Promo
               </span>
@@ -163,25 +162,33 @@ export function Navbar({ currentMunicipality, onSelectMunicipality }: NavbarProp
 
       {/* Mobile drawer */}
       {mobileMenuOpen && (
-        <div className="md:hidden border-t border-slate-100 bg-white px-4 pt-3 pb-5 space-y-3 animate-in slide-in-from-top-2">
+        <div className="md:hidden border-t border-slate-100 bg-white px-4 pt-3 pb-5 space-y-2.5 animate-in slide-in-from-top-2">
           <Link
             href="/"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-base font-semibold text-slate-800 hover:bg-slate-50"
+            className="block px-3 py-2 rounded-lg text-sm font-bold text-slate-800 hover:bg-slate-50"
           >
-            🏠 Ver todos los servicios
+            🏠 Directorio de Servicios
+          </Link>
+          <Link
+            href="/nosotros"
+            onClick={() => setMobileMenuOpen(false)}
+            className="block px-3 py-2 rounded-lg bg-emerald-50 text-emerald-950 text-sm font-black flex items-center gap-2 border border-emerald-200"
+          >
+            <Heart className="w-4 h-4 text-red-500 fill-red-500" />
+            <span>Nuestra Historia, Misión y Visión</span>
           </Link>
           <Link
             href="/como-funciona"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-base font-semibold text-slate-800 hover:bg-slate-50"
+            className="block px-3 py-2 rounded-lg text-sm font-semibold text-slate-700 hover:bg-slate-50"
           >
             💡 ¿Cómo funciona la plataforma?
           </Link>
           <Link
             href="/volante"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2.5 rounded-lg bg-amber-50 text-amber-900 text-sm font-bold"
+            className="block px-3 py-2 rounded-lg bg-amber-50 text-amber-900 text-sm font-bold"
           >
             🖨️ Ver e Imprimir Afiches con Código QR
           </Link>
@@ -195,14 +202,14 @@ export function Navbar({ currentMunicipality, onSelectMunicipality }: NavbarProp
           <Link
             href="/registro"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2.5 rounded-lg bg-emerald-50 text-emerald-800 text-base font-bold"
+            className="block px-3 py-2.5 rounded-lg bg-emerald-600 text-white text-sm font-bold text-center"
           >
             ⭐ Inscribir mi Servicio ($10.000/mes)
           </Link>
           <Link
             href="/admin"
             onClick={() => setMobileMenuOpen(false)}
-            className="block px-3 py-2 rounded-lg text-sm text-slate-500 hover:bg-slate-50"
+            className="block px-3 py-2 rounded-lg text-xs text-slate-400 hover:bg-slate-50 text-center"
           >
             🔐 Panel de Administración
           </Link>

@@ -1,7 +1,8 @@
 'use client';
 
 import React from 'react';
-import { Search, MapPin, CheckCircle2, MessageSquare, ArrowDown } from 'lucide-react';
+import Link from 'next/link';
+import { Search, MapPin, CheckCircle2, MessageSquare, ArrowDown, Heart } from 'lucide-react';
 import { Municipality } from '@/lib/types';
 
 interface HeroProps {
@@ -41,10 +42,20 @@ export function Hero({
   return (
     <section className="relative pt-6 pb-8 bg-linear-to-b from-amber-50/60 via-white to-slate-50 rounded-3xl border border-amber-100/80 px-4 sm:px-8 mt-2 shadow-xs">
       <div className="max-w-3xl mx-auto text-center space-y-4">
-        {/* Location pill */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-100/80 border border-emerald-300 text-emerald-900 text-xs font-bold tracking-wide">
-          <MapPin className="w-3.5 h-3.5 text-emerald-700" />
-          <span>Servicios disponibles en {currentMunicipality}, Arauca</span>
+        {/* Location pill & Story link */}
+        <div className="flex flex-wrap items-center justify-center gap-2">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-emerald-100/80 border border-emerald-300 text-emerald-900 text-xs font-bold tracking-wide">
+            <MapPin className="w-3.5 h-3.5 text-emerald-700" />
+            <span>Servicios disponibles en {currentMunicipality}, Arauca</span>
+          </div>
+
+          <Link
+            href="/nosotros"
+            className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100/80 hover:bg-amber-200 border border-amber-300 text-amber-950 text-xs font-bold transition-colors"
+          >
+            <Heart className="w-3 h-3 text-red-500 fill-red-500" />
+            <span>Nuestra Historia ↗</span>
+          </Link>
         </div>
 
         {/* Main Heading */}
