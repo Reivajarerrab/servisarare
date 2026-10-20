@@ -33,7 +33,7 @@ export function PromoBanner({ settings, currentMunicipality }: PromoBannerProps)
             ¿Prestas algún servicio en <span className="underline decoration-amber-300 decoration-2 underline-offset-2">{currentMunicipality}</span> o la región del Sarare?
           </h3>
           <p className="text-xs sm:text-sm text-amber-50 max-w-xl">
-            Inscríbete hoy por solo <span className="font-extrabold text-amber-200 bg-amber-900/40 px-1.5 py-0.5 rounded">${settings.promoPrice.toLocaleString('es-CO')} COP al mes</span> garantizado durante todo tu primer año. ¡Pagas una sola inscripción y apareces en todos los oficios que sabes hacer!
+            Inscríbete hoy por solo <span className="font-extrabold text-amber-200 bg-amber-900/40 px-1.5 py-0.5 rounded">${settings.promoPrice.toLocaleString('es-CO')} COP al mes</span> garantizado por 1 año a los primeros 50 afiliados (luego $15.000/mes). ¡Pagas una sola cuota y apareces en todos tus oficios!
           </p>
         </div>
 

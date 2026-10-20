@@ -71,11 +71,16 @@ function UneteContent() {
             Únase a <strong>ServiSarare</strong>, la plataforma donde las familias y negocios de <strong>{municipality}</strong> buscan electricistas, maestros de obra, plomeros, pintores, soldadores, instaladores de PVC, mecánicos, acarreos y más.
           </p>
 
-          {/* Urgency Counter Badge */}
-          <div className="inline-flex items-center gap-2 bg-amber-100 border border-amber-300 px-4 py-2 rounded-2xl text-xs sm:text-sm font-black text-amber-950">
-            <span>🔥 Promoción de Lanzamiento:</span>
-            <span className="bg-amber-300 text-slate-950 px-2 py-0.5 rounded-lg">${promoPrice.toLocaleString('es-CO')} COP/mes</span>
-            <span>— ¡Solo quedan {slotsLeft} cupos con precio congelado por 1 año!</span>
+          {/* Urgency Counter Badge with Full Transparency */}
+          <div className="inline-flex flex-col sm:flex-row items-center gap-2 bg-amber-100 border border-amber-300 px-4 py-2.5 rounded-2xl text-xs sm:text-sm font-black text-amber-950">
+            <div className="flex items-center gap-1.5 flex-wrap justify-center">
+              <span>🔥 Promoción Pioneros:</span>
+              <span className="bg-amber-300 text-slate-950 px-2 py-0.5 rounded-lg">${promoPrice.toLocaleString('es-CO')} COP/mes</span>
+              <span>(Primeros 50 cupos congelados por 1 año).</span>
+            </div>
+            <span className="text-slate-600 font-bold text-[11px] sm:text-xs">
+              • Del afiliado 51 en adelante: $15.000 COP/mes (Tarifa Estándar)
+            </span>
           </div>
         </div>
 

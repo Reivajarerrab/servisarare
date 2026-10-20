@@ -1,4 +1,4 @@
-export type Municipality = 'Saravena' | 'Tame' | 'Arauquita' | 'Fortul' | 'Cravo Norte' | 'Puerto Rondón';
+export type Municipality = 'Saravena' | 'Arauca' | 'Tame' | 'Arauquita' | 'Fortul' | 'Cravo Norte' | 'Puerto Rondón';
 
 export interface Category {
   id: string;

@@ -2,7 +2,8 @@ import { Category, Provider, SiteSettings, Municipality } from './types';
 
 export const MUNICIPALITIES: { name: Municipality; label: string; active: boolean }[] = [
   { name: 'Saravena', label: 'Saravena (Principal)', active: true },
-  { name: 'Tame', label: 'Tame', active: true },
+  { name: 'Arauca', label: 'Arauca (Capital)', active: true },
+  { name: 'Tame', label: 'Tame (Cuna de la Libertad)', active: true },
   { name: 'Arauquita', label: 'Arauquita', active: true },
   { name: 'Fortul', label: 'Fortul', active: true },
   { name: 'Cravo Norte', label: 'Cravo Norte', active: false },
